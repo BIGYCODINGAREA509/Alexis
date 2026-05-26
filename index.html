@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alexis© — Digital Excellence</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #1a1a24;
+    --surface: #16161f;
+    --border: rgba(255,255,255,0.07);
+    --text: #f0eff8;
+    --text2: #9897b0;
+    --text3: #5c5b72;
+    --accent: #c8b8ff;
+    --accent2: #7c6fff;
+    --accent3: #ff6b9d;
+    --gold: #e8c97a;
+    --glow: rgba(124,111,255,0.15);
+    --radius: 16px;
+    --transition: 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  [data-theme="light"] {
+    --bg: #f5f4fc;
+    --bg2: #eeecf8;
+    --bg3: #e4e1f5;
+    --surface: #ffffff;
+    --border: rgba(0,0,0,0.08);
+    --text: #0f0e1a;
+    --text2: #4a4862;
+    --text3: #9897b0;
+    --accent: #5a45e8;
+    --accent2: #7c6fff;
+    --accent3: #e84573;
+    --gold: #b8860b;
+    --glow: rgba(90,69,232,0.1);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    transition: background var(--transition), color var(--transition);
+  }
+
+  /* ── GRAIN OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.4;
+  }
+
+  /* ── CURSOR ── */
+  .cursor { position: fixed; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: transform 0.1s, width 0.3s, height 0.3s, opacity 0.3s; }
+  .cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid var(--accent2); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: transform 0.15s cubic-bezier(0.23,1,0.32,1), width 0.4s, height 0.4s, opacity 0.4s; opacity: 0.5; }
+  body:hover .cursor { opacity: 1; }
+
+  /* ── NAVBAR ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; height: 72px;
+    background: rgba(10,10,15,0.7);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    transition: background var(--transition);
+  }
+  [data-theme="light"] nav { background: rgba(245,244,252,0.8); }
+  .nav-logo {
+    display: flex; align-items: center; gap: 12px;
+    text-decoration: none; color: var(--text);
+  }
+  .nav-logo .nav-logo-dark { display: block; height: 44px; width: auto; transition: opacity 0.4s; }
+  .nav-logo .nav-logo-light { display: none; height: 44px; width: auto; transition: opacity 0.4s; }
+  [data-theme="light"] .nav-logo .nav-logo-dark { display: none; }
+  [data-theme="light"] .nav-logo .nav-logo-light { display: block; }
+  .nav-links { display: flex; align-items: center; gap: 32px; }
+  .nav-links a {
+    font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text2); text-decoration: none;
+    position: relative; padding: 4px 0;
+    transition: color 0.3s;
+  }
+  .nav-links a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px; background: var(--accent); transition: width 0.3s; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-actions { display: flex; align-items: center; gap: 12px; }
+  .btn-nav {
+    padding: 8px 20px; border-radius: 40px; font-family: 'Syne', sans-serif;
+    font-size: 13px; font-weight: 600; letter-spacing: 0.05em;
+    cursor: pointer; border: 1px solid var(--border); transition: all 0.3s;
+    background: transparent; color: var(--text2);
+  }
+  .btn-nav:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-nav.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  [data-theme="light"] .btn-nav.primary { color: #0a0a0f; }
+  .btn-nav.primary:hover { background: var(--accent2); border-color: var(--accent2); transform: translateY(-1px); box-shadow: 0 8px 24px var(--glow); }
+
+  /* LANG + THEME CONTROLS */
+  .ctrl-group { display: flex; align-items: center; gap: 6px; }
+  .lang-btn, .theme-btn {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 8px; padding: 5px 10px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--text2); cursor: pointer; transition: all 0.3s;
+  }
+  .lang-btn.active, .theme-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  [data-theme="light"] .lang-btn.active, [data-theme="light"] .theme-btn.active { color: #0a0a0f; }
+  .lang-btn:hover:not(.active), .theme-btn:hover:not(.active) { border-color: var(--accent); color: var(--accent); }
+  .theme-toggle {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 40px; width: 52px; height: 28px; cursor: pointer;
+    position: relative; transition: all 0.3s;
+  }
+  .theme-toggle::after {
+    content: ''; position: absolute; top: 3px; left: 3px;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--accent); transition: transform 0.3s;
+  }
+  [data-theme="light"] .theme-toggle::after { transform: translateX(24px); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh; display: flex; flex-direction: column;
+    justify-content: center; align-items: center; text-align: center;
+    padding: 120px 40px 80px; position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(124,111,255,0.12) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 40% at 80% 80%, rgba(200,184,255,0.06) 0%, transparent 60%),
+                radial-gradient(ellipse 30% 30% at 10% 90%, rgba(255,107,157,0.06) 0%, transparent 60%);
+  }
+  .hero-orb {
+    position: absolute; border-radius: 50%; filter: blur(80px); animation: float 8s ease-in-out infinite;
+  }
+  .orb1 { width: 500px; height: 500px; background: rgba(124,111,255,0.08); top: -100px; left: -150px; animation-delay: 0s; }
+  .orb2 { width: 400px; height: 400px; background: rgba(255,107,157,0.06); bottom: -100px; right: -100px; animation-delay: -3s; }
+  .orb3 { width: 300px; height: 300px; background: rgba(232,201,122,0.05); top: 40%; left: 60%; animation-delay: -5s; }
+  @keyframes float { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-20px) scale(1.05); } 66% { transform: translate(-20px,15px) scale(0.95); } }
+
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 400;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent);
+    margin-bottom: 24px; opacity: 0; animation: slideUp 0.8s 0.2s forwards;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .hero-eyebrow::before, .hero-eyebrow::after { content: ''; width: 32px; height: 1px; background: var(--accent); opacity: 0.5; }
+  .hero-title {
+    margin-bottom: 8px;
+    opacity: 0; animation: slideUp 0.8s 0.4s forwards;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .hero-title .hero-logo-dark { display: block; max-height: clamp(80px, 12vw, 160px); width: auto; }
+  .hero-title .hero-logo-light { display: none; max-height: clamp(80px, 12vw, 160px); width: auto; }
+  [data-theme="light"] .hero-title .hero-logo-dark { display: none; }
+  [data-theme="light"] .hero-title .hero-logo-light { display: block; }
+  .hero-title em { font-style: bold; color: var(--accent); }
+  .hero-title .copy-sym { font-size: 0.35em; vertical-align: super; color: var(--gold); font-family: 'Syne', sans-serif; }
+  .hero-sub {
+    font-family: 'Sf Pro Display', serif; font-size: clamp(18px, 2.5vw, 20px);
+    font-weight: 50; font-style: bold; color: var(--text2);
+    margin-bottom: 48px; opacity: 0; animation: slideUp 0.8s 0.6s forwards;
+    max-width: 600px;
+  }
+  .hero-ctas { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; opacity: 0; animation: slideUp 0.8s 0.8s forwards; }
+  .btn-primary {
+    padding: 16px 40px; border-radius: 50px; font-family: 'Syne', sans-serif;
+    font-size: 14px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    background: var(--accent); color: #fff; border: none; cursor: pointer;
+    transition: all 0.4s; position: relative; overflow: hidden;
+    text-decoration: none; display: inline-block;
+  }
+  [data-theme="light"] .btn-primary { color: #0a0a0f; }
+  .btn-primary::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--accent2), var(--accent3)); opacity: 0; transition: opacity 0.4s; }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(124,111,255,0.4); }
+  .btn-primary:hover::before { opacity: 1; }
+  .btn-primary span { position: relative; z-index: 1; }
+  .btn-outline {
+    padding: 15px 40px; border-radius: 50px; font-family: 'Syne', sans-serif;
+    font-size: 14px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    background: transparent; color: var(--text); border: 1px solid var(--border);
+    cursor: pointer; transition: all 0.4s; text-decoration: none; display: inline-block;
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-3px); }
+
+  .hero-scroll {
+    position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    opacity: 0; animation: fadeIn 1s 1.5s forwards;
+  }
+  .hero-scroll span { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text3); }
+  .scroll-line { width: 1px; height: 48px; background: linear-gradient(to bottom, var(--accent), transparent); animation: scrollPulse 2s ease-in-out infinite; }
+  @keyframes scrollPulse { 0%,100% { transform: scaleY(1); opacity: 1; } 50% { transform: scaleY(0.5); opacity: 0.5; } }
+
+  @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  /* ── STATS ── */
+  .stats {
+    padding: 60px 40px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 1px; background: var(--border); position: relative; z-index: 1;
+  }
+  .stat-item {
+    background: var(--bg);
+    padding: 40px; text-align: center;
+    transition: background var(--transition);
+  }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif; font-size: 56px; font-weight: 300;
+    color: var(--accent); line-height: 1;
+  }
+  .stat-label { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text2); margin-top: 8px; }
+
+  /* ── SECTION COMMONS ── */
+  section { position: relative; z-index: 1; }
+  .section-header { text-align: center; margin-bottom: 72px; }
+  .section-tag {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 16px;
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+  }
+  .section-tag::before, .section-tag::after { content: ''; width: 24px; height: 1px; background: var(--accent); opacity: 0.5; }
+  .section-title {
+    font-family: 'Sf Pro Display', serif; font-weight: 300;
+    font-size: clamp(40px, 5vw, 72px); line-height: 1.05; letter-spacing: -0.01em;
+  }
+  .section-title em { font-style: bold; color: var(--accent); }
+  .section-desc { font-size: 16px; color: var(--text2); max-width: 540px; margin: 16px auto 0; line-height: 1.7; }
+
+  /* ── SERVICES ── */
+  .services { padding: 120px 40px; }
+  .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); max-width: 1200px; margin: 0 auto; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .service-card {
+    background: var(--surface); padding: 48px 40px;
+    transition: background 0.3s, transform 0.4s;
+    cursor: default; position: relative; overflow: hidden;
+  }
+  .service-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--glow), transparent);
+    opacity: 0; transition: opacity 0.4s;
+  }
+  .service-card:hover::before { opacity: 1; }
+  .service-card:hover { background: var(--bg3); }
+  .service-icon {
+    width: 52px; height: 52px; border-radius: 14px;
+    background: var(--bg3); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; margin-bottom: 24px;
+    transition: background 0.3s, border-color 0.3s;
+  }
+  .service-card:hover .service-icon { background: var(--accent); border-color: var(--accent); }
+  .service-title { font-size: 18px; font-weight: 700; margin-bottom: 12px; transition: color 0.3s; }
+  .service-card:hover .service-title { color: var(--accent); }
+  .service-desc { font-size: 14px; color: var(--text2); line-height: 1.7; }
+  .service-num {
+    position: absolute; top: 24px; right: 24px;
+    font-family: 'Cormorant Garamond', serif; font-size: 48px; font-weight: 300;
+    color: var(--text3); opacity: 0.3; line-height: 1;
+  }
+
+  /* ── PORTFOLIO ── */
+  .portfolio { padding: 120px 40px; background: var(--bg2); }
+  .portfolio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1200px; margin: 0 auto; }
+  .project-card {
+    border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border);
+    background: var(--surface); transition: all 0.4s; position: relative;
+    cursor: pointer;
+  }
+  .project-card:hover { transform: translateY(-8px); box-shadow: 0 24px 60px rgba(0,0,0,0.4), 0 0 0 1px var(--accent); }
+  .project-preview {
+    height: 200px; position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .project-preview-inner { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 48px; transition: transform 0.6s; }
+  .project-card:hover .project-preview-inner { transform: scale(1.1); }
+  .project-body { padding: 24px; }
+  .project-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .project-tag {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em;
+    padding: 3px 8px; border-radius: 4px; background: var(--bg3); color: var(--accent);
+    text-transform: uppercase;
+  }
+  .project-name { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+  .project-desc { font-size: 13px; color: var(--text2); line-height: 1.6; }
+  .project-arrow {
+    position: absolute; top: 16px; right: 16px; width: 36px; height: 36px;
+    border-radius: 50%; background: var(--bg3); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center; font-size: 14px;
+    opacity: 0; transform: translate(8px,-8px); transition: all 0.3s;
+  }
+  .project-card:hover .project-arrow { opacity: 1; transform: translate(0,0); }
+
+  /* ── PROCESS ── */
+  .process { padding: 120px 40px; }
+  .process-steps { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 0; }
+  .process-step {
+    display: flex; gap: 40px; padding: 40px 0;
+    border-bottom: 1px solid var(--border); position: relative;
+  }
+  .step-num {
+    font-family: 'Cormorant Garamond', serif; font-size: 56px; font-weight: 300;
+    color: var(--text3); line-height: 1; min-width: 60px; opacity: 0.4;
+    transition: color 0.3s, opacity 0.3s;
+  }
+  .process-step:hover .step-num { color: var(--accent); opacity: 1; }
+  .step-content { flex: 1; padding-top: 8px; }
+  .step-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .step-desc { font-size: 14px; color: var(--text2); line-height: 1.7; }
+  .step-line {
+    position: absolute; left: 60px; top: 0; bottom: 0; width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--border), transparent);
+  }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials { padding: 120px 40px; background: var(--bg2); }
+  .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1200px; margin: 0 auto; }
+  .testimonial-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 36px; transition: all 0.4s;
+  }
+  .testimonial-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+  .testimonial-stars { color: var(--gold); font-size: 14px; margin-bottom: 16px; letter-spacing: 2px; }
+  .testimonial-text { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 300; font-style: italic; line-height: 1.6; color: var(--text2); margin-bottom: 24px; }
+  .testimonial-author { display: flex; align-items: center; gap: 12px; }
+  .author-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px; color: #fff; flex-shrink: 0;
+  }
+  [data-theme="light"] .author-avatar { color: #0a0a0f; }
+  .author-name { font-size: 14px; font-weight: 700; }
+  .author-role { font-size: 12px; color: var(--text2); }
+
+  /* ── CTA ── */
+  .cta-section {
+    padding: 120px 40px; text-align: center;
+    background: linear-gradient(135deg, var(--bg) 0%, var(--bg3) 50%, var(--bg) 100%);
+    position: relative; overflow: hidden;
+  }
+  .cta-section::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 60% at 50% 50%, var(--glow), transparent);
+  }
+  .cta-title {
+    font-family: 'Poppins', serif; font-size: clamp(48px, 6vw, 90px);
+    font-weight: 300; line-height: 1; margin-bottom: 24px; position: relative;
+  }
+  .cta-title em { font-style: italic; color: var(--accent); }
+  .cta-sub { font-size: 16px; color: var(--text2); margin-bottom: 48px; position: relative; }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 60px 40px; border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 24px; background: var(--bg);
+  }
+  .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; color: var(--text2); }
+  .footer-logo span { color: var(--accent); }
+  .footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
+  .footer-links a { font-size: 13px; color: var(--text3); text-decoration: none; transition: color 0.3s; }
+  .footer-links a:hover { color: var(--accent); }
+  .footer-copy { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text3); }
+
+  /* ── MODAL OVERLAY ── */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 2000;
+    background: rgba(0,0,0,0.7); backdrop-filter: blur(12px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.4s;
+  }
+  .modal-overlay.active { opacity: 1; pointer-events: all; }
+  .modal {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 24px; padding: 48px; width: 100%; max-width: 480px;
+    margin: 16px; transform: translateY(20px) scale(0.97);
+    transition: transform 0.4s cubic-bezier(0.23,1,0.32,1);
+    position: relative; overflow: hidden;
+  }
+  .modal-overlay.active .modal { transform: translateY(0) scale(1); }
+  .modal::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--accent2), var(--accent), var(--accent3));
+  }
+  .modal-close {
+    position: absolute; top: 16px; right: 16px;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--bg3); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 18px; color: var(--text2);
+    transition: all 0.3s;
+  }
+  .modal-close:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .modal-logo-wrap { display: flex; justify-content: center; margin-bottom: 24px; }
+  .modal-logo-wrap img { height: 40px; filter: brightness(10); }
+  [data-theme="light"] .modal-logo-wrap img { filter: none; }
+  .modal-title { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 300; text-align: center; margin-bottom: 6px; }
+  .modal-sub { font-size: 13px; color: var(--text2); text-align: center; margin-bottom: 32px; }
+  .tabs { display: flex; background: var(--bg3); border-radius: 10px; padding: 4px; margin-bottom: 28px; }
+  .tab {
+    flex: 1; padding: 9px; text-align: center; border-radius: 7px;
+    font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s;
+    color: var(--text2); border: none; background: transparent;
+  }
+  .tab.active { background: var(--accent); color: #fff; }
+  [data-theme="light"] .tab.active { color: #0a0a0f; }
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text2); margin-bottom: 8px; }
+  .form-input {
+    width: 100%; padding: 13px 16px; border-radius: 10px;
+    background: var(--bg3); border: 1px solid var(--border);
+    color: var(--text); font-family: 'Syne', sans-serif; font-size: 14px;
+    outline: none; transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--glow); }
+  .form-input::placeholder { color: var(--text3); }
+  .form-submit {
+    width: 100%; padding: 14px; border-radius: 10px;
+    background: var(--accent); color: #fff; border: none;
+    font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700;
+    letter-spacing: 0.05em; cursor: pointer; transition: all 0.3s;
+    margin-top: 8px;
+  }
+  [data-theme="light"] .form-submit { color: #0a0a0f; }
+  .form-submit:hover { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 8px 24px var(--glow); }
+  .form-divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; }
+  .form-divider::before, .form-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .form-divider span { font-size: 12px; color: var(--text3); }
+  .social-logins { display: flex; gap: 10px; }
+  .social-btn {
+    flex: 1; padding: 11px; border-radius: 10px; border: 1px solid var(--border);
+    background: var(--bg3); color: var(--text); font-size: 18px; cursor: pointer;
+    transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;
+    font-family: 'Syne', sans-serif; font-size: 13px;
+  }
+  .social-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .toast {
+    position: fixed; bottom: 32px; right: 32px; z-index: 3000;
+    background: var(--accent); color: #fff; padding: 14px 24px;
+    border-radius: 12px; font-size: 14px; font-weight: 600;
+    transform: translateY(80px); opacity: 0; transition: all 0.4s;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  [data-theme="light"] .toast { color: #0a0a0f; }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* USER BADGE (after login) */
+  .user-badge {
+    display: none; align-items: center; gap: 10px;
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 40px; padding: 6px 16px 6px 8px;
+  }
+  .user-badge.visible { display: flex; }
+  .user-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: #fff;
+  }
+  [data-theme="light"] .user-avatar { color: #0a0a0f; }
+  .user-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .logout-btn {
+    background: none; border: none; cursor: pointer; color: var(--text3);
+    font-size: 12px; padding: 2px; transition: color 0.3s;
+  }
+  .logout-btn:hover { color: var(--accent3); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .services-grid, .portfolio-grid, .testimonials-grid { grid-template-columns: 1fr; }
+    .hero { padding: 100px 24px 60px; }
+    .hero-ctas { flex-direction: column; }
+    footer { flex-direction: column; text-align: center; }
+    .ctrl-group { flex-wrap: wrap; justify-content: center; }
+  }
+  @media (max-width: 1024px) {
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
+    .portfolio-grid { grid-template-columns: repeat(2, 1fr); }
+    .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* SCROLL REVEAL */
+  .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s cubic-bezier(0.23,1,0.32,1), transform 0.7s cubic-bezier(0.23,1,0.32,1); }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* MOBILE MENU */
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+  .hamburger span { width: 22px; height: 2px; background: var(--text); border-radius: 2px; transition: all 0.3s; }
+  @media (max-width: 768px) { .hamburger { display: flex; } }
+  .mobile-menu {
+    position: fixed; inset: 0; z-index: 999; background: var(--bg);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 32px;
+    opacity: 0; pointer-events: none; transition: opacity 0.4s;
+  }
+  .mobile-menu.open { opacity: 1; pointer-events: all; }
+  .mobile-menu a { font-size: 32px; font-family: 'Cormorant Garamond', serif; font-weight: 300; color: var(--text); text-decoration: none; transition: color 0.3s; }
+  .mobile-menu a:hover { color: var(--accent); }
+
+  .gradient-text { background: linear-gradient(135deg, var(--accent), var(--accent3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+  /* Featured project (wide) */
+  .portfolio-grid .project-card:first-child { grid-column: span 2; }
+  .portfolio-grid .project-card:first-child .project-preview { height: 260px; }
+  @media (max-width: 1024px) { .portfolio-grid .project-card:first-child { grid-column: span 1; } }
+
+  /* ── WHATSAPP FLOAT BUTTON ── */
+  .wa-float {
+    position: fixed; bottom: 28px; left: 28px; z-index: 4000;
+    width: 56px; height: 56px; border-radius: 50%;
+    background: #25D366; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-decoration: none;
+  }
+  .wa-float:hover { transform: scale(1.1); box-shadow: 0 8px 32px rgba(37,211,102,0.6); }
+  .wa-float svg { width: 28px; height: 28px; fill: #fff; }
+  .wa-pulse {
+    position: absolute; inset: 0; border-radius: 50%;
+    background: rgba(37,211,102,0.4);
+    animation: waPulse 2s ease-out infinite;
+  }
+  @keyframes waPulse { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(1.8); opacity: 0; } }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#services" onclick="closeMobileMenu()" data-i18n="nav.services">Services</a>
+  <a href="#portfolio" onclick="closeMobileMenu()" data-i18n="nav.portfolio">Portfolio</a>
+  <a href="#process" onclick="closeMobileMenu()" data-i18n="nav.process">Processus</a>
+  <a href="#contact" onclick="closeMobileMenu()" data-i18n="nav.contact">Contact</a>
+</div>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="#" class="nav-logo">
+    <img src="images/Alexis_Posterizer.png" alt="Alexis©" class="nav-logo-dark">
+    <img src="images/Alexis_Posterizer1.png" alt="Alexis©" class="nav-logo-light">
+  </a>
+  <div class="nav-links">
+    <a href="#services" data-i18n="nav.services">Services</a>
+    <a href="#portfolio" data-i18n="nav.portfolio">Portfolio</a>
+    <a href="#process" data-i18n="nav.process">Processus</a>
+    <a href="#contact" data-i18n="nav.contact">Contact</a>
+  </div>
+  <div class="nav-actions">
+    <div class="ctrl-group">
+      <button class="lang-btn active" onclick="setLang('fr')" id="lbFr">FR</button>
+      <button class="lang-btn" onclick="setLang('ht')" id="lbHt">HT</button>
+      <button class="lang-btn" onclick="setLang('en')" id="lbEn">EN</button>
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme"></button>
+    <!-- Auth buttons -->
+    <div id="authBtns" style="display:flex;gap:8px;">
+      <button class="btn-nav" onclick="openModal('login')" data-i18n="nav.login">Connexion</button>
+      <button class="btn-nav primary" onclick="openModal('register')" data-i18n="nav.register">Inscription</button>
+    </div>
+    <!-- User badge (after login) -->
+    <div class="user-badge" id="userBadge">
+      <div class="user-avatar" id="userInitial">A</div>
+      <span class="user-name" id="userNameDisplay">Alexis</span>
+      <button class="logout-btn" onclick="logout()">✕</button>
+    </div>
+    <div class="hamburger" onclick="toggleMobileMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-orb orb1"></div>
+  <div class="hero-orb orb2"></div>
+  <div class="hero-orb orb3"></div>
+  <div class="hero-eyebrow" data-i18n="hero.eyebrow">COMPAGNIE DE DÉVELOPPEMENT DIGITALE</div>
+  <h1 class="hero-title">
+    <img src="images/Alexis_Posterizer.png" alt="Alexis©" class="hero-logo-dark">
+    <img src="images/Alexis_Posterizer1.png" alt="Alexis©" class="hero-logo-light">
+  </h1>
+  <p class="hero-sub" data-i18n="hero.sub">L'excellence numérique au service de votre vision</p>
+  <div class="hero-ctas">
+    <a href="#portfolio" class="btn-primary"><span data-i18n="hero.cta1">Voir nos projets</span></a>
+    <a href="#contact" class="btn-outline" data-i18n="hero.cta2">Démarrer un projet avec nous</a>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span data-i18n="hero.scroll">Défiler</span>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat-item reveal">
+    <div class="stat-num" data-count="120">0</div>
+    <div class="stat-label" data-i18n="stats.projects">Projets Livrés</div>
+  </div>
+  <div class="stat-item reveal">
+    <div class="stat-num" data-count="98">0</div>
+    <div class="stat-label" data-i18n="stats.satisfaction">% Satisfaction Client</div>
+  </div>
+  <div class="stat-item reveal">
+    <div class="stat-num" data-count="5">0</div>
+    <div class="stat-label" data-i18n="stats.years">Années d'Expérience</div>
+  </div>
+  <div class="stat-item reveal">
+    <div class="stat-num" data-count="40">0</div>
+    <div class="stat-label" data-i18n="stats.clients">Clients Actifs</div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="section-header reveal">
+    <div class="section-tag" data-i18n="services.tag">Ce que nous faisons</div>
+    <b><h2 class="section-title">NOS SERVICES</h2></b>
+    <p class="section-desc" data-i18n="services.desc">Des solutions digitales complètes pour propulser votre entreprise vers l'excellence.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <div class="service-num">01</div>
+      <div class="service-icon">📱</div>
+      <div class="service-title" data-i18n="s1.title">Applications Mobiles</div>
+      <div class="service-desc" data-i18n="s1.desc">Applications iOS & Android performantes, avec des interfaces intuitives et une expérience utilisateur exceptionnelle.</div>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-num">02</div>
+      <div class="service-icon">🖥️</div>
+      <div class="service-title" data-i18n="s2.title">Applications Desktop</div>
+      <div class="service-desc" data-i18n="s2.desc">Logiciels puissants pour Windows, macOS et Linux. Performance native et design soigné pour vos équipes.</div>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-num">03</div>
+      <div class="service-icon">🌐</div>
+      <div class="service-title" data-i18n="s3.title">Sites Web</div>
+      <div class="service-desc" data-i18n="s3.desc">Sites vitrines, portfolios et plateformes web sur mesure, optimisés SEO et accessibles sur tous les appareils.</div>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-num">04</div>
+      <div class="service-icon">🛍️</div>
+      <div class="service-title" data-i18n="s4.title">Applications de Vente</div>
+      <div class="service-desc" data-i18n="s4.desc">Boutiques en ligne, systèmes POS et plateformes e-commerce avec gestion des stocks, paiements et analytics.</div>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-num">05</div>
+      <div class="service-icon">🎨</div>
+      <div class="service-title" data-i18n="s5.title">Design Graphique</div>
+      <div class="service-desc" data-i18n="s5.desc">Identité visuelle, logos, chartes graphiques, supports print et digital. Votre marque, sublimée.</div>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-num">06</div>
+      <div class="service-icon">🤖</div>
+      <div class="service-title" data-i18n="s6.title">Gestion d'entreprises</div>
+      <div class="service-desc" data-i18n="s6.desc">Creation et gestions d'applications de gestion intégrées pour optimiser vos processus et améliorer la productivité.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section class="portfolio" id="portfolio">
+  <div class="section-header reveal">
+    <div class="section-tag" data-i18n="portfolio.tag">Nos Réalisations</div>
+    <h2 class="section-title">PROJETS RÉCENTS</h2>
+    <p class="section-desc" data-i18n="portfolio.desc">Une sélection de travaux qui illustrent notre savoir-faire et notre passion pour l'excellence.</p>
+  </div>
+  <div class="portfolio-grid">
+    <div class="project-card reveal">
+      <div class="project-preview" style="background: linear-gradient(135deg,#0d1f12,#1a3d20);">
+        <div class="project-preview-inner" style="font-size:0;"><img src="images/Image1.jpg" alt="Agritech" style="width:100%;height:100%;object-fit:cover;transition:transform 0.6s;"></div>
+      </div>
+      <div class="project-arrow">↗</div>
+      <div class="project-body">
+        <div class="project-tags">
+          <span class="project-tag">Agritech</span>
+          <span class="project-tag">Web</span>
+        </div>
+        <div class="project-name" data-i18n="p1.name">Agritech</div>
+        <div class="project-desc" data-i18n="p1.desc">Solution digitale pour l'agriculture moderne — gestion des cultures, suivi en temps réel et optimisation des rendements.</div>
+      </div>
+    </div>
+    <div class="project-card reveal">
+      <div class="project-preview" style="background: linear-gradient(135deg,#0a1628,#1e3a5f);">
+        <div class="project-preview-inner" style="font-size:0;"><img src="images/Image2.jpg" alt="Extragency" style="width:100%;height:100%;object-fit:cover;transition:transform 0.6s;"></div>
+      </div>
+      <div class="project-arrow">↗</div>
+      <div class="project-body">
+        <div class="project-tags">
+          <span class="project-tag">Agency</span>
+          <span class="project-tag">Web</span>
+        </div>
+        <div class="project-name" data-i18n="p2.name">Extragency</div>
+        <div class="project-desc" data-i18n="p2.desc">Site vitrine moderne pour une agence créative — design percutant, animations fluides et expérience utilisateur soignée.</div>
+      </div>
+    </div>
+    <div class="project-card reveal">
+      <div class="project-preview" style="background: linear-gradient(135deg,#1f0a2e,#4a1a6e);">
+        <div class="project-preview-inner" style="font-size:0;"><img src="images/Image3.jpg" alt="Vanda" style="width:100%;height:100%;object-fit:cover;transition:transform 0.6s;"></div>
+      </div>  
+      <div class="project-arrow">↗</div>
+      <div class="project-body">
+        <div class="project-tags">
+          <span class="project-tag">Branding</span>
+          <span class="project-tag">Web</span>
+        </div>
+        <div class="project-name" data-i18n="p3.name">Vanda</div>
+        <div class="project-desc" data-i18n="p3.desc">Identité visuelle complète et site web élégant — une marque forte, cohérente et mémorable.</div>
+      </div>
+    </div>
+    <div class="project-card reveal">
+      <div class="project-preview" style="background: linear-gradient(135deg,#1f0a0a,#5f1a1a);">
+        <div class="project-preview-inner" style="font-size:0;"><img src="images/Image4.jpg" alt="Graphic Designs" style="width:100%;height:100%;object-fit:cover;transition:transform 0.6s;"></div>
+      </div>
+      <div class="project-arrow">↗</div>
+      <div class="project-body">
+        <div class="project-tags">
+          <span class="project-tag">Design</span>
+          <span class="project-tag">Graphique</span>
+        </div>
+        <div class="project-name" data-i18n="p4.name">Graphic Designs</div>
+        <div class="project-desc" data-i18n="p4.desc">Collection de créations graphiques — affiches, logos, visuels digitaux et supports print à fort impact visuel.</div>
+      </div>
+    </div>
+    <div class="project-card reveal">
+      <div class="project-preview" style="background: linear-gradient(135deg,#0a1a2e,#1a2e4a);">
+        <div class="project-preview-inner" style="font-size:0;"><img src="images/Image5.jpg" alt="E-Gallery" style="width:100%;height:100%;object-fit:cover;transition:transform 0.6s;"></div>
+      </div>
+      <div class="project-arrow">↗</div>
+      <div class="project-body">
+        <div class="project-tags">
+          <span class="project-tag">Genious - GameBox</span>
+          <span class="project-tag">Web, VBA</span>
+        </div>
+        <div class="project-name" data-i18n="p5.name">Genious - GameBox</div>
+        <div class="project-desc" data-i18n="p5.desc">Plateforme de jeux interactifs — expérience utilisateur immersive, gameplay engageant et communauté active.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process" id="process">
+  <div class="section-header reveal">
+    <div class="section-tag" data-i18n="process.tag">Comment nous travaillons</div>
+    <h2 class="section-title">NOS PROCESSUS</h2>
+  </div>
+  <div class="process-steps">
+    <div class="process-step reveal">
+      <div class="step-line"></div>
+      <div class="step-num">01</div>
+      <div class="step-content">
+        <div class="step-title" data-i18n="step1.title">Découverte & Stratégie</div>
+        <div class="step-desc" data-i18n="step1.desc">Nous commençons par comprendre profondément vos objectifs, votre marché et vos utilisateurs. Une stratégie solide est la base de tout projet réussi.</div>
+      </div>
+    </div>
+    <div class="process-step reveal">
+      <div class="step-line"></div>
+      <div class="step-num">02</div>
+      <div class="step-content">
+        <div class="step-title" data-i18n="step2.title">Design & Prototypage</div>
+        <div class="step-desc" data-i18n="step2.desc">Nos designers créent des maquettes interactives et des prototypes qui vous permettent de visualiser le produit final avant le développement.</div>
+      </div>
+    </div>
+    <div class="process-step reveal">
+      <div class="step-line"></div>
+      <div class="step-num">03</div>
+      <div class="step-content">
+        <div class="step-title" data-i18n="step3.title">Développement Agile</div>
+        <div class="step-desc" data-i18n="step3.desc">Notre équipe développe en sprints avec des livraisons régulières. Vous suivez l'avancement en temps réel et validez chaque étape.</div>
+      </div>
+    </div>
+    <div class="process-step reveal">
+      <div class="step-line"></div>
+      <div class="step-num">04</div>
+      <div class="step-content">
+        <div class="step-title" data-i18n="step4.title">Tests & Optimisation</div>
+        <div class="step-desc" data-i18n="step4.desc">Tests rigoureux de performance, sécurité et accessibilité. Chaque bug est corrigé avant la mise en ligne.</div>
+      </div>
+    </div>
+    <div class="process-step reveal">
+      <div class="step-num">05</div>
+      <div class="step-content">
+        <div class="step-title" data-i18n="step5.title">Lancement & Support</div>
+        <div class="step-desc" data-i18n="step5.desc">Déploiement soigné et accompagnement post-lancement. Nous restons à vos côtés pour les mises à jour et l'évolution de votre produit.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="testimonials">
+  <div class="section-header reveal">
+    <div class="section-tag" data-i18n="testimonials.tag">Ce qu'ils disent</div>
+    <h2 class="section-title">NOS CLIENTS</h2>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card reveal">
+      <div class="testimonial-stars">★★★★★</div>
+      <div class="testimonial-text" data-i18n="t1.text">« Ekip Alexis© a, se yo k pi fo! Tout travay yo se bagay pwofesyonel net! »</div>
+      <div class="testimonial-author">
+        <div class="author-avatar">RD</div>
+        <div>
+          <div class="author-name">ROUMY DESIGN</div>
+          <div class="author-role" data-i18n="t1.role">CEO, Roumy Design - Haiti</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card reveal">
+      <div class="testimonial-stars">★★★★★</div>
+      <div class="testimonial-text" data-i18n="t2.text">« Depi lè m ap travay ak nou an, kliyan m yo ogmante pi plis! Bon bagay ti mesye!»</div>
+      <div class="testimonial-author">
+        <div class="author-avatar">MB</div>
+        <div>
+          <div class="author-name">Malachy Bastien</div>
+          <div class="author-role" data-i18n="t2.role">Fondateur, Festival des Idees - Ench ap li</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card reveal">
+      <div class="testimonial-stars">★★★★★</div>
+      <div class="testimonial-text" data-i18n="t3.text">« Design époustouflant, livraison dans les délais, et un support réactif. Alexis© est notre partenaire digital de confiance. »</div>
+      <div class="testimonial-author">
+        <div class="author-avatar">SK</div>
+        <div>
+          <div class="author-name">Sophie Karels</div>
+          <div class="author-role" data-i18n="t3.role">Directrice Marketing, BrandHQ</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="section-tag reveal" data-i18n="cta.tag">Prêt à commencer?</div>
+  <h2 class="cta-title reveal">Donnons vie à votre projet</h2>
+  <p class="cta-sub reveal" data-i18n="cta.desc">Un projet en tête ? Discutons-en. Notre équipe est prête à créer quelque chose d'extraordinaire avec vous.</p>
+  <div class="hero-ctas reveal">
+    <button class="btn-primary" onclick="openModal('register')"><span data-i18n="cta.btn1">Créer un compte</span></button>
+    <button class="btn-outline" onclick="openWhatsApp()" data-i18n="cta.btn2">Nous contacter</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Alexis<span>©</span></div>
+  <div class="footer-links">
+    <a href="#services" data-i18n="nav.services">Services</a>
+    <a href="#portfolio" data-i18n="nav.portfolio">Portfolio</a>
+    <a href="#process" data-i18n="nav.process">Processus</a>
+    <a href="#" data-i18n="footer.privacy">Confidentialité</a>
+    <a href="#" data-i18n="footer.terms">Conditions</a>
+  </div>
+  <div class="footer-copy">© 2025 Alexis. All rights reserved.</div>
+</footer>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOnBg(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-logo-wrap">
+      <img src="images/Alexis_Posterizer.png" alt="Alexis©" style="height:36px;">
+    </div>
+    <h2 class="modal-title" id="modalTitle">Bienvenue</h2>
+    <p class="modal-sub" id="modalSub" data-i18n="modal.sub">Connectez-vous ou créez un compte</p>
+    <div class="tabs">
+      <button class="tab active" id="tabLogin" onclick="switchTab('login')" data-i18n="tab.login">Connexion</button>
+      <button class="tab" id="tabRegister" onclick="switchTab('register')" data-i18n="tab.register">Inscription</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="tab-content active" id="loginContent">
+      <div class="form-group">
+        <label data-i18n="form.email">Adresse Email</label>
+        <input type="email" class="form-input" id="loginEmail" placeholder="vous@exemple.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label data-i18n="form.password">Mot de Passe</label>
+        <input type="password" class="form-input" id="loginPass" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button class="form-submit" onclick="handleLogin()" data-i18n="btn.login">Se connecter →</button>
+      <div class="form-divider"><span data-i18n="form.or">ou continuer avec</span></div>
+      <div class="social-logins">
+        <button class="social-btn" onclick="socialLogin('Google')">🌐 Google</button>
+        <button class="social-btn" onclick="socialLogin('GitHub')">🐙 GitHub</button>
+      </div>
+    </div>
+
+    <!-- REGISTER -->
+    <div class="tab-content" id="registerContent">
+      <div class="form-group">
+        <label data-i18n="form.name">Nom Complet</label>
+        <input type="text" class="form-input" id="regName" placeholder="Prénom Nom" autocomplete="name">
+      </div>
+      <div class="form-group">
+        <label data-i18n="form.email">Adresse Email</label>
+        <input type="email" class="form-input" id="regEmail" placeholder="vous@exemple.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label data-i18n="form.password">Mot de Passe</label>
+        <input type="password" class="form-input" id="regPass" placeholder="Min. 8 caractères" autocomplete="new-password">
+      </div>
+      <button class="form-submit" onclick="handleRegister()" data-i18n="btn.register">Créer mon compte →</button>
+      <div class="form-divider"><span data-i18n="form.or">ou continuer avec</span></div>
+      <div class="social-logins">
+        <button class="social-btn" onclick="socialLogin('Google')">🌐 Google</button>
+        <button class="social-btn" onclick="socialLogin('GitHub')">🐙 GitHub</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+
+// ══════════════════════════════════════════════
+//  ⚙️  SUPABASE CONFIG  — remplace par tes clés
+// ══════════════════════════════════════════════
+const SUPABASE_URL  = 'https://TON_PROJECT_ID.supabase.co';   // 🔴 à remplacer
+const SUPABASE_ANON = 'TON_ANON_KEY';                          // 🔴 à remplacer
+const _sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+// ══ WHATSAPP ══
+const WA_NUMBER = '50955679002';
+function openWhatsApp(msg) {
+  const text = encodeURIComponent(msg || 'Bonjour Alexis©, je voudrais discuter d\'un projet !');
+  window.open('https://wa.me/' + WA_NUMBER + '?text=' + text, '_blank');
+}
+
+// ── TRANSLATIONS ──
+const i18n = {
+  fr: {
+    'nav.services': 'Services', 'nav.portfolio': 'Portfolio', 'nav.process': 'Processus',
+    'nav.contact': 'Contact', 'nav.login': 'Connexion', 'nav.register': 'Inscription',
+    'hero.eyebrow': 'COMPAGNIE DE DÉVELOPPEMENT DIGITALE',
+    'hero.sub': "L'excellence numérique au service de votre vision",
+    'hero.cta1': 'Voir nos projets', 'hero.cta2': 'Démarrer un projet avec nous',
+    'hero.scroll': 'Défiler',
+    'stats.projects': 'Projets Livrés', 'stats.satisfaction': '% Satisfaction Client',
+    'stats.years': "Années d'Expérience", 'stats.clients': 'Clients Actifs',
+    'services.tag': 'Ce que nous faisons', 'services.desc': 'Des solutions digitales complètes pour propulser votre entreprise vers l\'excellence.',
+    's1.title': 'Applications Mobiles', 's1.desc': 'Applications iOS & Android performantes, avec des interfaces intuitives et une expérience utilisateur exceptionnelle.',
+    's2.title': 'Applications Desktop', 's2.desc': 'Logiciels puissants pour Windows, macOS et Linux. Performance native et design soigné pour vos équipes.',
+    's3.title': 'Sites Web', 's3.desc': 'Sites vitrines, portfolios et plateformes web sur mesure, optimisés SEO et accessibles sur tous les appareils.',
+    's4.title': 'Applications de Vente', 's4.desc': 'Boutiques en ligne, systèmes POS et plateformes e-commerce avec gestion des stocks, paiements et analytics.',
+    's5.title': 'Design Graphique', 's5.desc': 'Identité visuelle, logos, chartes graphiques, supports print et digital. Votre marque, sublimée.',
+    's6.title': 'Gestion de systemes', 's6.desc': 'Creation et gestions d\'applications de gestion intégrées pour optimiser vos processus et améliorer la productivité.',
+    'portfolio.tag': 'Nos Réalisations', 'portfolio.desc': 'Une sélection de travaux qui illustrent notre savoir-faire et notre passion pour l\'excellence.',
+    'p1.name': 'AGRITECH - Haiti', 'p1.desc': 'Plateforme e-commerce complète avec paiements mobiles, gestion de vente de produits agricoles completes et dashboard analytique.',
+    'p2.name': 'EXTRAGENCY - Haiti', 'p2.desc': 'Application de gestion scolaire avec suivi des performances et communication avec les parents.',
+    'p3.name': 'VANDA - Haiti', 'p3.desc': 'Application de vente en ligne et en local avec gestion des stocks, paiements et analytics adaptés au systeme de ventes haïtiens.',
+    'p4.name': 'Graphic Designs', 'p4.desc': 'Identité visuelle, logos, chartes graphiques, supports print et digital. Votre marque, sublimée. Logo, flyer, carte de visite, affiche, bannière, etc.',
+    'p5.name': 'Genious - GameBox', 'p5.desc': 'Plateforme de jeux interactifs — expérience utilisateur immersive, gameplay engageant et communauté active.',
+    'process.tag': 'Comment nous travaillons',
+    'step1.title': 'Découverte & Stratégie', 'step1.desc': 'Nous commençons par comprendre profondément vos objectifs, votre marché et vos utilisateurs. Une stratégie solide est la base de tout projet réussi.',
+    'step2.title': 'Design & Prototypage', 'step2.desc': 'Nos designers créent des maquettes interactives et des prototypes qui vous permettent de visualiser le produit final avant le développement.',
+    'step3.title': 'Développement Agile', 'step3.desc': 'Notre équipe développe en sprints avec des livraisons régulières. Vous suivez l\'avancement en temps réel et validez chaque étape.',
+    'step4.title': 'Tests & Optimisation', 'step4.desc': 'Tests rigoureux de performance, sécurité et accessibilité. Chaque bug est corrigé avant la mise en ligne.',
+    'step5.title': 'Lancement & Support', 'step5.desc': 'Déploiement soigné et accompagnement post-lancement. Nous restons à vos côtés pour les mises à jour et l\'évolution de votre produit.',
+    'testimonials.tag': 'Ce qu\'ils disent',
+    't1.text': '« Ekip Alexis© a, se yo k pi fo! Tout travay yo se bagay malè nèt! »', 't1.role': 'CEO, Roumy Design - Haiti',
+    't2.text': '« Depi lè m ap travay ak nou an, kliyan m yo ogmante pi plis! Bon bagay ti mesye!»', 't2.role': 'Fondateur, Festival des Idees - Ench ap li',
+    't3.text': '« Design époustouflant, livraison dans les délais, et un support réactif. Alexis© est notre partenaire digital de confiance. »', 't3.role': 'Directrice Marketing, BrandHQ',
+    'cta.tag': 'Prêt à commencer?', 'cta.desc': 'Un projet en tête ? Discutons-en. Notre équipe est prête à créer quelque chose d\'extraordinaire avec vous.',
+    'cta.btn1': 'Créer un compte', 'cta.btn2': 'Nous contacter',
+    'footer.privacy': 'Confidentialité', 'footer.terms': 'Conditions',
+    'modal.sub': 'Connectez-vous ou créez un compte',
+    'tab.login': 'Connexion', 'tab.register': 'Inscription',
+    'form.email': 'Adresse Email', 'form.password': 'Mot de Passe', 'form.name': 'Nom Complet', 'form.or': 'ou continuer avec',
+    'btn.login': 'Se connecter →', 'btn.register': 'Créer mon compte →',
+    'toast.login': 'Connexion réussie ! Bienvenue', 'toast.register': 'Compte créé ! Bienvenue',
+    'toast.logout': 'Vous êtes déconnecté(e)',
+    'err.email': 'Veuillez entrer votre email.', 'err.pass': 'Veuillez entrer votre mot de passe.', 'err.name': 'Veuillez entrer votre nom.',
+  },
+  ht: {
+    'nav.services': 'Sèvis', 'nav.portfolio': 'Pòtfòy', 'nav.process': 'Pwosesis',
+    'nav.contact': 'Kontakte', 'nav.login': 'Konekte', 'nav.register': 'Enskri',
+    'hero.eyebrow': 'COMPAGNIE DE DÉVELOPPEMENT DIGITALE',
+    'hero.sub': 'Ekselans nimerik nan sèvis vizyon ou',
+    'hero.cta1': 'Wè pwojè nou yo', 'hero.cta2': 'Kòmanse yon pwojè',
+    'hero.scroll': 'Défile',
+    'stats.projects': 'Pwojè Livre', 'stats.satisfaction': '% Satisfaksyon Kliyan',
+    'stats.years': 'Ane Eksperyans', 'stats.clients': 'Kliyan Aktif',
+    'services.tag': 'Sa nou fè', 'services.desc': 'Solisyon dijital konplè pou lanse biznis ou nan ekselans.',
+    's1.title': 'Aplikasyon Mobil', 's1.desc': 'Aplikasyon iOS & Android pèfòman, ak entèfas entwitif ak eksperyans itilizatè eksepsyonèl.',
+    's2.title': 'Aplikasyon Desktop', 's2.desc': 'Lojisyèl pisan pou Windows, macOS ak Linux. Pèfòmans natif-natal ak dizayn rafine pou ekip ou.',
+    's3.title': 'Sit Entènèt', 's3.desc': 'Sit vitrin, pòtfòy ak platfòm web sou mezi, optimizè SEO ak aksesib sou tout aparèy.',
+    's4.title': 'Aplikasyon Vant', 's4.desc': 'Boutik anliy, sistèm POS ak platfòm e-komès ak jesyon stòk, peman ak analytics.',
+    's5.title': 'Dizayn Grafik', 's5.desc': 'Idantite vizyal, logo, chant grafik, sipò enprime ak dijital. Mak ou a, sublimaye.',
+    's6.title': 'IA & Otomatizasyon', 's6.desc': 'Chatbot entèlijan, otomatizasyon fliks travay ak solisyon IA pèsonalize pou sektè ou.',
+    'portfolio.tag': 'Reyalizasyon nou yo', 'portfolio.desc': 'Yon seleksyon travay ki montre konesans nou ak pasyon nou pou ekselans.',
+    'p1.name': 'MarketPlace Pro Ayiti', 'p1.desc': 'Platfòm e-komès konplè ak peman mobil, jesyon envantè an tan reyèl ak dashboard analytik.',
+    'p2.name': 'PayFlow Mobil', 'p2.desc': 'Aplikasyon transfè lajan sekurizè ak otantifikasyon byometrik ak istwa tranzaksyon.',
+    'p3.name': 'Natura Brand Identity', 'p3.desc': 'Idantite vizyal konplè ak sit entènèt pou yon mak kòsmètik natirèl ayisyen.',
+    'p4.name': 'BusinessIQ Dashboard', 'p4.desc': 'Lojisyèl jesyon biznis ak KPIs an tan reyèl, rapò otomatize ak alèt entèlijan.',
+    'p5.name': 'LearnUp App', 'p5.desc': 'Platfòm aprantisaj anliy ak videyo, kiz entèaktif ak swivi pwogresyon pèsonalize.',
+    'process.tag': 'Kijan nou travay',
+    'step1.title': 'Dekouvèt & Estrateji', 'step1.desc': 'Nou kòmanse pa konprann pwofondman objektif ou yo, mache ou ak itilizatè ou yo. Yon estrateji solid se baz tout pwojè reyisi.',
+    'step2.title': 'Dizayn & Pwototip', 'step2.desc': 'Dizennè nou yo kreye makèt entèraktif ak pwototip ki pèmèt ou vizialize pwodui final la anvan devlopman.',
+    'step3.title': 'Devlopman Ajil', 'step3.desc': 'Ekip nou an devlope nan sprint ak livrezon regilye. Ou swiv avans lan an tan reyèl ak valide chak etap.',
+    'step4.title': 'Tès & Optimizasyon', 'step4.desc': 'Tès rijurèz pèfòmans, sekirite ak aksesibilite. Chak bug korije anvan lansman.',
+    'step5.title': 'Lansman & Sipò', 'step5.desc': 'Deplwaman swayan ak akonpayèman apre-lansman. Nou rete bò kote ou pou mizajou ak evolisyon pwodui ou a.',
+    'testimonials.tag': 'Sa yo di',
+    't1.text': '« Alexis© te transfòme vizyon nou an yon aplikasyon bèl. Ekip yo pwofesyonèl, kreyatif ak toujou disponib. »', 't1.role': 'CEO, TechAyiti',
+    't2.text': '« Boutik anliy nou an wè vant li monte 300% gras ak travay eksepsyonèl Alexis©. Mwen rekòmande fòtman ! »', 't2.role': 'Fondatè, ShopKarayib',
+    't3.text': '« Dizayn etonan, livrezon nan tan, ak yon sipò reaktif. Alexis© se patnè dijital konfyans nou. »', 't3.role': 'Direktè Maketing, BrandHQ',
+    'cta.tag': 'Prè pou kòmanse?', 'cta.desc': 'Yon pwojè nan tèt ou? Ann diskite. Ekip nou an prè pou kreye yon bagay ekstraòdinè avèk ou.',
+    'cta.btn1': 'Kreye yon kont', 'cta.btn2': 'Kontakte nou',
+    'footer.privacy': 'Konfidyansyalite', 'footer.terms': 'Kondisyon',
+    'modal.sub': 'Konekte ou oswa kreye yon kont',
+    'tab.login': 'Konekte', 'tab.register': 'Enskri',
+    'form.email': 'Adrès Email', 'form.password': 'Modpas', 'form.name': 'Non Konplè', 'form.or': 'oswa kontinye ak',
+    'btn.login': 'Konekte →', 'btn.register': 'Kreye kont mwen →',
+    'toast.login': 'Koneksyon reyisi ! Byenveni', 'toast.register': 'Kont kreye ! Byenveni',
+    'toast.logout': 'Ou dekonekte',
+    'err.email': 'Tanpri antre email ou.', 'err.pass': 'Tanpri antre modpas ou.', 'err.name': 'Tanpri antre non ou.',
+  },
+  en: {
+    'nav.services': 'Services', 'nav.portfolio': 'Portfolio', 'nav.process': 'Process',
+    'nav.contact': 'Contact', 'nav.login': 'Sign In', 'nav.register': 'Sign Up',
+    'hero.eyebrow': 'DIGI',
+    'hero.sub': 'Digital excellence in service of your vision',
+    'hero.cta1': 'View our work', 'hero.cta2': 'Start a project',
+    'hero.scroll': 'Scroll',
+    'stats.projects': 'Projects Delivered', 'stats.satisfaction': '% Client Satisfaction',
+    'stats.years': 'Years of Experience', 'stats.clients': 'Active Clients',
+    'services.tag': 'What we do', 'services.desc': 'Complete digital solutions to propel your business towards excellence.',
+    's1.title': 'Mobile Applications', 's1.desc': 'High-performance iOS & Android apps with intuitive interfaces and exceptional user experience.',
+    's2.title': 'Desktop Applications', 's2.desc': 'Powerful software for Windows, macOS and Linux. Native performance and refined design for your teams.',
+    's3.title': 'Websites', 's3.desc': 'Custom showcase sites, portfolios and web platforms, SEO-optimized and accessible across all devices.',
+    's4.title': 'Sales Applications', 's4.desc': 'Online stores, POS systems and e-commerce platforms with inventory management, payments and analytics.',
+    's5.title': 'Graphic Design', 's5.desc': 'Visual identity, logos, brand guidelines, print and digital materials. Your brand, elevated.',
+    's6.title': 'AI & Automation', 's6.desc': 'Intelligent chatbots, workflow automation and custom AI solutions tailored to your industry.',
+    'portfolio.tag': 'Our Work', 'portfolio.desc': 'A curated selection of projects that showcase our expertise and passion for excellence.',
+    'p1.name': 'MarketPlace Pro Haiti', 'p1.desc': 'Complete e-commerce platform with mobile payments, real-time inventory management and analytics dashboard.',
+    'p2.name': 'PayFlow Mobile', 'p2.desc': 'Secure money transfer app with biometric authentication and complete transaction history.',
+    'p3.name': 'Natura Brand Identity', 'p3.desc': 'Complete visual identity and website for a Haitian natural cosmetics brand.',
+    'p4.name': 'BusinessIQ Dashboard', 'p4.desc': 'Business management software with real-time KPIs, automated reports and intelligent alerts.',
+    'p5.name': 'LearnUp App', 'p5.desc': 'Online learning platform with videos, interactive quizzes and personalized progress tracking.',
+    'process.tag': 'How we work',
+    'step1.title': 'Discovery & Strategy', 'step1.desc': 'We start by deeply understanding your goals, market and users. A solid strategy is the foundation of every successful project.',
+    'step2.title': 'Design & Prototyping', 'step2.desc': 'Our designers create interactive mockups and prototypes that let you visualize the final product before development.',
+    'step3.title': 'Agile Development', 'step3.desc': 'Our team develops in sprints with regular deliveries. You follow progress in real time and validate each stage.',
+    'step4.title': 'Testing & Optimization', 'step4.desc': 'Rigorous performance, security and accessibility testing. Every bug fixed before launch.',
+    'step5.title': 'Launch & Support', 'step5.desc': 'Careful deployment and post-launch support. We stay by your side for updates and product evolution.',
+    'testimonials.tag': 'What they say',
+    't1.text': '"Alexis© transformed our vision into a beautiful app. Their team is professional, creative and always attentive."', 't1.role': 'CEO, TechHaiti',
+    't2.text': '"Our online store saw sales increase 300% thanks to the exceptional work of Alexis©. Highly recommended!"', 't2.role': 'Founder, ShopKaribeans',
+    't3.text': '"Stunning design, on-time delivery, and responsive support. Alexis© is our trusted digital partner."', 't3.role': 'Marketing Director, BrandHQ',
+    'cta.tag': 'Ready to start?', 'cta.desc': 'Have a project in mind? Let\'s discuss it. Our team is ready to create something extraordinary with you.',
+    'cta.btn1': 'Create an account', 'cta.btn2': 'Contact us',
+    'footer.privacy': 'Privacy', 'footer.terms': 'Terms',
+    'modal.sub': 'Sign in or create an account',
+    'tab.login': 'Sign In', 'tab.register': 'Sign Up',
+    'form.email': 'Email Address', 'form.password': 'Password', 'form.name': 'Full Name', 'form.or': 'or continue with',
+    'btn.login': 'Sign in →', 'btn.register': 'Create my account →',
+    'toast.login': 'Login successful! Welcome', 'toast.register': 'Account created! Welcome',
+    'toast.logout': 'You have been logged out',
+    'err.email': 'Please enter your email.', 'err.pass': 'Please enter your password.', 'err.name': 'Please enter your name.',
+  }
+};
+
+let currentLang = 'fr';
+let currentUser = null;
+
+function setLang(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  ['lbFr','lbHt','lbEn'].forEach(id => document.getElementById(id).classList.remove('active'));
+  document.getElementById('lb' + lang.charAt(0).toUpperCase() + lang.slice(1)).classList.add('active');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (i18n[lang][key]) el.textContent = i18n[lang][key];
+  });
+  // placeholders
+  const pi = { loginEmail: 'form.email', regEmail: 'form.email', regName: 'form.name', loginPass: 'form.password', regPass: 'form.password' };
+  // keep english placeholders as hints
+}
+
+function toggleTheme() {
+  const html = document.documentElement;
+  html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+}
+
+// ── MODAL ──
+function openModal(tab) {
+  document.getElementById('modalOverlay').classList.add('active');
+  switchTab(tab);
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+function closeModalOnBg(e) { if (e.target === document.getElementById('modalOverlay')) closeModal(); }
+function switchTab(tab) {
+  const t = i18n[currentLang];
+  document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+  document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+  document.getElementById('loginContent').classList.toggle('active', tab === 'login');
+  document.getElementById('registerContent').classList.toggle('active', tab === 'register');
+  document.getElementById('modalTitle').textContent = tab === 'login' ? (t['tab.login'] || 'Connexion') : (t['tab.register'] || 'Inscription');
+}
+
+// ══════════════════════════════════════════════
+//  🔐  AUTH — Supabase réel + session persistante
+// ══════════════════════════════════════════════
+
+// Affiche le badge utilisateur dans la nav
+function showUserBadge(user) {
+  const displayName = user.user_metadata?.full_name || user.email.split('@')[0];
+  currentUser = { name: displayName, email: user.email };
+  document.getElementById('authBtns').style.display = 'none';
+  const badge = document.getElementById('userBadge');
+  badge.classList.add('visible');
+  document.getElementById('userInitial').textContent = displayName.charAt(0).toUpperCase();
+  document.getElementById('userNameDisplay').textContent = displayName.split(' ')[0];
+}
+
+// Masque le badge et réinitialise l'état
+function hideUserBadge() {
+  currentUser = null;
+  document.getElementById('authBtns').style.display = 'flex';
+  document.getElementById('userBadge').classList.remove('visible');
+}
+
+// Sauvegarde la session dans localStorage pour la persistance
+function saveSession(session) {
+  if (session) {
+    localStorage.setItem('alexis_session', JSON.stringify({
+      access_token: session.access_token,
+      refresh_token: session.refresh_token,
+      expires_at: session.expires_at
+    }));
+  } else {
+    localStorage.removeItem('alexis_session');
+  }
+}
+
+// Restaure la session au chargement de la page
+async function restoreSession() {
+  try {
+    const saved = localStorage.getItem('alexis_session');
+    if (!saved) return;
+    const { access_token, refresh_token } = JSON.parse(saved);
+    const { data, error } = await _sb.auth.setSession({ access_token, refresh_token });
+    if (error || !data.session) { localStorage.removeItem('alexis_session'); return; }
+    showUserBadge(data.session.user);
+  } catch(e) { localStorage.removeItem('alexis_session'); }
+}
+
+// Inscription
+async function handleRegister() {
+  const name  = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const pass  = document.getElementById('regPass').value;
+  const t = i18n[currentLang];
+  if (!name)  { showToast(t['err.name'],  true); return; }
+  if (!email) { showToast(t['err.email'], true); return; }
+  if (!pass)  { showToast(t['err.pass'],  true); return; }
+  if (pass.length < 6) { showToast('Mot de passe min. 6 caractères.', true); return; }
+
+  setFormLoading(true);
+  const { data, error } = await _sb.auth.signUp({
+    email, password: pass,
+    options: { data: { full_name: name } }
+  });
+  setFormLoading(false);
+
+  if (error) { showToast(error.message, true); return; }
+
+  if (data.session) {
+    // Connexion immédiate (email confirmation désactivée dans Supabase)
+    saveSession(data.session);
+    showUserBadge(data.session.user);
+    closeModal();
+    showToast(t['toast.register'] + ' ' + name.split(' ')[0] + ' !');
+    // Sauvegarde du profil dans la table profiles
+    await _sb.from('profiles').upsert({
+      id: data.session.user.id,
+      full_name: name,
+      email: email,
+      updated_at: new Date().toISOString()
+    });
+  } else {
+    // Email de confirmation envoyé
+    closeModal();
+    showToast('✉️ Vérifiez votre email pour confirmer votre compte !');
+  }
+}
+
+// Connexion
+async function handleLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPass').value;
+  const t = i18n[currentLang];
+  if (!email) { showToast(t['err.email'], true); return; }
+  if (!pass)  { showToast(t['err.pass'],  true); return; }
+
+  setFormLoading(true);
+  const { data, error } = await _sb.auth.signInWithPassword({ email, password: pass });
+  setFormLoading(false);
+
+  if (error) { showToast(error.message, true); return; }
+
+  saveSession(data.session);
+  showUserBadge(data.session.user);
+  closeModal();
+  const displayName = data.session.user.user_metadata?.full_name || email.split('@')[0];
+  showToast(t['toast.login'] + ' ' + displayName.split(' ')[0] + ' !');
+}
+
+// Connexion OAuth (Google / GitHub)
+async function socialLogin(provider) {
+  const p = provider.toLowerCase();
+  const { error } = await _sb.auth.signInWithOAuth({
+    provider: p,
+    options: { redirectTo: window.location.href }
+  });
+  if (error) showToast(error.message, true);
+}
+
+// Déconnexion
+async function logout() {
+  await _sb.auth.signOut();
+  saveSession(null);
+  hideUserBadge();
+  showToast(i18n[currentLang]['toast.logout']);
+}
+
+// Spinner sur les boutons submit pendant les appels async
+function setFormLoading(loading) {
+  document.querySelectorAll('.form-submit').forEach(btn => {
+    btn.disabled = loading;
+    btn.style.opacity = loading ? '0.6' : '1';
+    if (loading) btn.dataset.origText = btn.textContent;
+    else if (btn.dataset.origText) btn.textContent = btn.dataset.origText;
+  });
+}
+
+// Écoute les changements de session Supabase (OAuth callback, expiration…)
+_sb.auth.onAuthStateChange((event, session) => {
+  if (event === 'SIGNED_IN' && session) {
+    saveSession(session);
+    showUserBadge(session.user);
+  } else if (event === 'SIGNED_OUT') {
+    saveSession(null);
+    hideUserBadge();
+  } else if (event === 'TOKEN_REFRESHED' && session) {
+    saveSession(session);
+  }
+});
+
+function showToast(msg, isErr = false) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.style.background = isErr ? '#e84573' : 'var(--accent)';
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3500);
+}
+
+// ── CURSOR ──
+const cursor = document.getElementById('cursor');
+const cursorRing = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx + 'px'; cursor.style.top = my + 'px'; });
+function animRing() { rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12; cursorRing.style.left = rx + 'px'; cursorRing.style.top = ry + 'px'; requestAnimationFrame(animRing); }
+animRing();
+document.querySelectorAll('a,button,.project-card,.service-card').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.style.width = '12px'; cursor.style.height = '12px'; cursorRing.style.width = '52px'; cursorRing.style.height = '52px'; cursorRing.style.opacity = '0.8'; });
+  el.addEventListener('mouseleave', () => { cursor.style.width = '8px'; cursor.style.height = '8px'; cursorRing.style.width = '36px'; cursorRing.style.height = '36px'; cursorRing.style.opacity = '0.5'; });
+});
+
+// ── MOBILE MENU ──
+function toggleMobileMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
+function closeMobileMenu() { document.getElementById('mobileMenu').classList.remove('open'); }
+
+// ── SCROLL REVEAL ──
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), (e.target.dataset.delay || 0) * 100); observer.unobserve(e.target); }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach((el, i) => {
+  el.dataset.delay = i % 4;
+  observer.observe(el);
+});
+
+// ── COUNT-UP ──
+function countUp(el, target, duration = 1800) {
+  let start = 0; const step = target / (duration / 16);
+  const timer = setInterval(() => { start += step; if (start >= target) { el.textContent = target; clearInterval(timer); } else { el.textContent = Math.floor(start); } }, 16);
+}
+const statObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { const target = +e.target.dataset.count; countUp(e.target, target); statObs.unobserve(e.target); } });
+}, { threshold: 0.5 });
+document.querySelectorAll('[data-count]').forEach(el => statObs.observe(el));
+
+// Init lang
+setLang('fr');
+
+// 🔄 Restaure la session si l'utilisateur était déjà connecté
+restoreSession();
+
+// Keyboard: Escape closes modal
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
